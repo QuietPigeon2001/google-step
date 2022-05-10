@@ -3,6 +3,7 @@ def main():
     with open("words.txt") as file:
         words = file.readlines()
         words = [line.rstrip() for line in words]
+
     
     # Converts all characters to lower case
     word = input().lower()  
@@ -15,39 +16,43 @@ def main():
     sorted_word = "".join(sorted(word))
 
     # Sorted all the characters in all words in file in alphabetical order
+    sorted_list = []
     for i in range(len(words)):
-        words[i] = sorted(words[i])
-
         # Converts characters into string
-        words[i] = "".join(words[i])    
+            w = "".join(sorted(words[i]))
+            sorted_list.append(w)
 
-    # Newly sorted list
-    sorted_list = sorted(words)     
+    # Maps words to their own sorted characteres
+    sorted_words_map = {}
+    for i in range(len(words)):
+        sorted_words_map[words[i]] = sorted_list[i]
+   
+    # Sorted items in list in alphabetical order
+    sorted_list = sorted(sorted_list)
 
-    def binary_search(arr, x):
+    def binary_search(sorted_array, search_string):
         """
         Function to search for the targeted string with binary search 
         """
         l = 0
-        r = len(arr)
+        r = len(sorted_array)
         while (l <= r):
             mid = l + ((r - l) // 2)
-            res = (x == arr[mid])
-            if (x == arr[mid]):
-                return True 
-     
-            if (x > arr[mid]):
+            if (search_string == sorted_array[mid]):
+                return sorted_array[mid]
+            if (search_string > sorted_array[mid]):
                 l = mid + 1
-     
             else:
                 r = mid - 1
         return False
 
-    res = binary_search(sorted_list, sorted_word)
-    
-    file.close()
+    # Searches for key with values matching the anagram
+    res = []
+    for key in sorted_words_map:
+        if sorted_words_map[key] == binary_search(sorted_list, sorted_word):
+            res.append(key)
 
     return res
 
-    
-print(main())
+if __name__== "__main__":
+    print(main())
