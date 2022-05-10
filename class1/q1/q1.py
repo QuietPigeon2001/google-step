@@ -17,8 +17,8 @@ def main():
     # Sorted all the characters in all words in file in alphabetical order
     sorted_list = []
 
+    # Converts characters into string
     for i in range(len(words)):
-        # Converts characters into string
             w = "".join(sorted(words[i]))
             sorted_list.append(w)
 
