@@ -1,3 +1,6 @@
+"""
+Boyer-moore algorithm
+"""
 res,curr,prev,pprev,counter = 0,0,0,0,0
 while True:
     pprev = prev
