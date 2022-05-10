@@ -3,7 +3,6 @@ def main():
     with open("words.txt") as file:
         words = file.readlines()
         words = [line.rstrip() for line in words]
-
     
     # Converts all characters to lower case
     word = input().lower()  
@@ -17,6 +16,7 @@ def main():
 
     # Sorted all the characters in all words in file in alphabetical order
     sorted_list = []
+
     for i in range(len(words)):
         # Converts characters into string
             w = "".join(sorted(words[i]))
@@ -26,30 +26,11 @@ def main():
     sorted_words_map = {}
     for i in range(len(words)):
         sorted_words_map[words[i]] = sorted_list[i]
-   
-    # Sorted items in list in alphabetical order
-    sorted_list = sorted(sorted_list)
-
-    def binary_search(sorted_array, search_string):
-        """
-        Function to search for the targeted string with binary search 
-        """
-        l = 0
-        r = len(sorted_array)
-        while (l <= r):
-            mid = l + ((r - l) // 2)
-            if (search_string == sorted_array[mid]):
-                return sorted_array[mid]
-            if (search_string > sorted_array[mid]):
-                l = mid + 1
-            else:
-                r = mid - 1
-        return False
 
     # Searches for key with values matching the anagram
     res = []
     for key in sorted_words_map:
-        if sorted_words_map[key] == binary_search(sorted_list, sorted_word):
+        if sorted_words_map[key] == sorted_word:
             res.append(key)
 
     return res
