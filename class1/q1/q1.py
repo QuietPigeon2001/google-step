@@ -13,11 +13,9 @@ def main():
 
     # Sorts characters in the word in alphabetical order
     sorted_word = "".join(sorted(word))
-
-    # Sorted all the characters in all words in file in alphabetical order
+    
+    # Converts characters into string and sorts all the characters in all words in file in alphabetical order
     sorted_list = []
-
-    # Converts characters into string
     for i in range(len(words)):
             w = "".join(sorted(words[i]))
             sorted_list.append(w)
