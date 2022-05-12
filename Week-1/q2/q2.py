@@ -1,8 +1,6 @@
 import sys
 
-"""
-Usage: $python q2.py input_file output_file
-"""
+# Usage: $python q2.py input_file output_file
 
 SIZE = 26   
 SCORES = [1,3,2,2,1,3,3,1,1,4,4,2,2,1,1,3,4,1,1,1,2,3,3,4,3,4]
