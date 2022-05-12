@@ -56,7 +56,6 @@ def main():
             for letter in words[i]:
                 dictionary_word_frequency[ord(letter) - ord('a')] += 1
 
-
             # Compares both lists of frequencies
             for k in range(SIZE):
                 if dictionary_word_frequency[k] > test_letter_frequency[k] and dictionary_word_frequency[k] >= 1:
