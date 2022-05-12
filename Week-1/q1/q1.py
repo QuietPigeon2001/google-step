@@ -23,15 +23,13 @@ def main():
     # Maps words to their own sorted characteres
     sorted_words_map = {}
     for i in range(len(words)):
-        sorted_words_map[words[i]] = sorted_list[i]
+        original_word = words[i]
+        if not sorted_list[i] in sorted_words_map:
+            sorted_words_map[sorted_list[i]] = [original_word]
+        else:
+            sorted_words_map[sorted_list[i]].append(original_word)
 
-    # Searches for key with values matching the anagram
-    res = []
-    for key in sorted_words_map:
-        if sorted_words_map[key] == sorted_word:
-            res.append(key)
-
-    return res
+    return sorted_words_map[sorted_word]
 
 if __name__== "__main__":
     print(main())
