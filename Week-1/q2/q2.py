@@ -59,7 +59,7 @@ def main():
 
             # Compares both lists of frequencies
             for k in range(SIZE):
-                if dictionary_word_frequency[k] > test_letter_frequency[k] and dictionary_word_frequency[k] >= 1:
+                if dictionary_word_frequency[k] > test_letter_frequency[k]:
                     flag = True 
                     break
             
