@@ -44,10 +44,10 @@ def dotProd(a,b,c):
         for j in range(n):
             c[i, j] = rowColSum(a, b, i, j)
     return c
+print(c[i])
 
 # Assigns new value to C 
 c = dotProd(a,b,c)
-print(c)
 
 ######################################################
 
