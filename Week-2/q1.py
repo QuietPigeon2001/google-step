@@ -21,6 +21,34 @@ begin = time.time()
 ######################################################
 # Write code to calculate C = A * B                  #
 # (without using numpy librarlies e.g., numpy.dot()) #
+
+def rowColSum(matrix1, matrix2, row, col):
+    """
+    Adds the elements in respective rows and columns
+    :type matrix1, matrix2: n-d matrix
+    :type row, col: int
+    :rtype: int
+    """
+    res = 0
+    for i in range(n):
+        res += matrix1[row, i] * matrix2[i, col]
+    return res
+
+def dotProd(a,b,c):
+    """
+    Returns the dot product of matrices a and b
+    :type a, b: n-d matrix
+    :rtype: n-d matrix
+    """
+    for i in range(n):
+        for j in range(n):
+            c[i, j] = rowColSum(a, b, i, j)
+    return c
+
+# Assigns new value to C 
+c = dotProd(a,b,c)
+print(c)
+
 ######################################################
 
 end = time.time()
