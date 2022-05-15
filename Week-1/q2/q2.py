@@ -16,8 +16,8 @@ def read(file):
     return words
 
 def main():
-    input_file = sys.argv[1]
-    output_name = sys.argv[2]
+    input_file = "medium.txt"    
+    output_name = "a"
 
     output_file = open(output_name,'w+')
 
