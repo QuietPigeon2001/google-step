@@ -12,6 +12,8 @@ class Cache:
     ###########################
     # Write your code here :) #
     self.n = n
+
+    # Declares hash table and a list to record the order of url's
     self.cache = {}
     self.ordered_list = []
     ###########################
@@ -23,15 +25,23 @@ class Cache:
   def access_page(self, url, contents):
     ###########################
     # Write your code here :) #
+
+    # Records order of url (oldest -> newest)
     self.ordered_list.append(url)
+
+    # Checks if url is stored
     if url not in self.cache:
+        # Adds pair to hash table
         self.cache[url] = contents
     else:
+        # Refreshes the order of the url by removing the older one
         self.ordered_list.remove(url)
-
+    
+    # Check if cache is full or not
     if len(self.ordered_list) > self.n :
-            del self.cache[self.ordered_list[0]]
-            self.ordered_list.pop(0)
+        # Removes the oldest cache and its order
+        del self.cache[self.ordered_list[0]]
+        self.ordered_list.pop(0)
 
     ###########################
 
@@ -40,6 +50,7 @@ class Cache:
   def get_pages(self):
     ###########################
     # Write your code here :) #
+    # Reverses order (newest -> oldest)
     return self.ordered_list[::-1]
     ###########################
 
