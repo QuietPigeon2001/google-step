@@ -2,7 +2,7 @@
 
 def cache_queue(cache):
     """
-    Checks if the pair already exists in the cache. If yes, it will put the pair to the last of the table, else, the oldest pair will be removed and the newest pair will be added.
+    Checks if the pair already exists in the cache. If yes, it will put the pair to the last of the table, else, the oldest pair will beremoved and the newest pair will be added.
     :type cache: Dictionary
     """
     print("Url:")
@@ -38,4 +38,4 @@ def main():
         cache_queue(cache)
 
 if __name__ == "__main__":
-    main()
+    main() 
