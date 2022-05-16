@@ -27,7 +27,6 @@ class Cache:
     if url not in self.cache:
         self.cache[url] = contents
     else:
-        index = self.ordered_list.index(url)
         self.ordered_list.remove(url)
 
     if len(self.ordered_list) > self.n :
