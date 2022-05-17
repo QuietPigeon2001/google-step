@@ -14,8 +14,9 @@ def cache_queue(cache, n):
         url = input()
         print("Webpage: ")
         webpage = input()
-            
-        ordered_list.append(url)    
+         
+        pair = {url: webpage}
+        ordered_list.append(list(pair.items()))    
         if not url or not webpage:
             exit()
         
@@ -23,9 +24,9 @@ def cache_queue(cache, n):
             # Adds pair to hash table
             cache[url] = webpage
         else:
-            ordered_list.remove(url)
+            ordered_list.remove(list(pair.items()))
         if len(ordered_list) > n:
-            del cache[ordered_list[-1]]
+            del cache[ordered_list[-1][0][0]]
             ordered_list.pop(0)
 
         print(ordered_list[::-1])
