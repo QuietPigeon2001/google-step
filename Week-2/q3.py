@@ -8,7 +8,6 @@ def cache_queue(cache, n):
     # Converts hash table to list
     ordered_list = []
 
-
     while True:
         print("Url:")
         url = input()
