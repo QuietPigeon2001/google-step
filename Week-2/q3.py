@@ -19,7 +19,8 @@ def cache_queue(cache, n):
          
         # Adds url to list to record order (in reverse order)
         pair = {url: webpage}
-        ordered_list.append(list(pair.items()))    
+        ordered_list.append(list(pair.items()))
+
         # Exits program when no input is registered
         if not url or not webpage:
             exit()
