@@ -127,21 +127,26 @@ def calc(tokens, start, end, answer):
         if tokens[start]['type'] == 'NUMBER' or tokens[start]['type'] == 'OBRACKET':
             if tokens[start]['type'] == 'NUMBER':
                 n = tokens[start]['number']
+                print("n",n)
+                print("@", start)
             else:
+                print("in")
                 flag = True
                 n = nested(tokens, start)[0]
-
+                print("nested", n)
             if tokens[start - 1]['type'] == 'PLUS':
+                print("plus")
                 if signs(start, tokens):
                     answer += ranged(tokens, start)
                     start += 3
                 else:
                     answer += n
+                    print(answer)
                     if flag == True:
                         start = nested(tokens, start)[1]
-                        print("index updated! %i" %(start))
 
             elif tokens[start - 1]['type'] == 'MINUS':
+                print("minus")
                 if signs(start, tokens):
                     answer -= ranged(tokens, start)
                     start += 3
@@ -149,14 +154,23 @@ def calc(tokens, start, end, answer):
                     answer -= n
                     if flag == True:
                         start = nested(tokens, start)[1] 
-                        print("index updated! %i" %(start))
+
+            elif tokens[start - 1]['type'] == 'MULTIPLY':
+                print("times")
+                print("n2", n)
+                answer *= n
         start += 1
     return answer
 
 def nested(tokens, start):
+    # Finds end bracket
     end = brackets(tokens, start)
+    # Moves 1 step forward to get number 
     start += 1
+    while tokens[start]['type'] != 'NUMBER':
+        start += 1
     answer = tokens[start]['number']
+    print("first in nested", answer)
     return calc(tokens, start, end, answer), end
 
 
@@ -164,7 +178,6 @@ def evaluate(tokens):
     index = 1 
     answer = 0
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-    
     return calc(tokens, index, len(tokens), answer)
     
 
@@ -191,6 +204,7 @@ def run_test():
     test("6/4")
     test("1-(5+1)")
     test("(5+2)*2")
+    test("2*(5+2)")
     print("==== Test finished! ====\n")
 
 run_test()
