@@ -96,50 +96,77 @@ def tokenize(line):
 
     return tokens
 
-def signs(ls, index, tokens):
-    if index + 1 < ls:
+def signs(index, tokens):
+    if index + 1 < len(tokens):
         if tokens[index + 1]['type'] == 'MULTIPLY' or tokens[index + 1]['type'] == 'DIVIDE':
             return True
     return False
 
+def brackets(tokens, index):
+    # Finds bracket pair
+    while index < len(tokens):
+        if tokens[index]['type'] == 'CBRACKET':
+            return index
+        index += 1
+
 def ranged(tokens, index):
     # first number in operation
+    if tokens[index + 2]['type'] == 'OBRACKET':
+        n = nested(tokens, index)[0]
+    else:
+        n = tokens[index + 2]['number']
     if tokens[index + 1]['type'] == 'MULTIPLY':
-        answer = tokens[index]['number'] * tokens[index + 2]['number']
+        answer = tokens[index]['number'] * n
     elif tokens[index + 1]['type'] == 'DIVIDE':
-        answer = tokens[index]['number'] / tokens[index + 2]['number']
+        answer = tokens[index]['number'] / n
     return answer
+
+def calc(tokens, start, end, answer):
+    flag = False
+    while start < end:
+        if tokens[start]['type'] == 'NUMBER' or tokens[start]['type'] == 'OBRACKET':
+            if tokens[start]['type'] == 'NUMBER':
+                n = tokens[start]['number']
+            else:
+                flag = True
+                n = nested(tokens, start)[0]
+
+            if tokens[start - 1]['type'] == 'PLUS':
+                if signs(start, tokens):
+                    answer += ranged(tokens, start)
+                    start += 3
+                else:
+                    answer += n
+                    if flag == True:
+                        start = nested(tokens, start)[1]
+                        print("index updated! %i" %(start))
+
+            elif tokens[start - 1]['type'] == 'MINUS':
+                if signs(start, tokens):
+                    answer -= ranged(tokens, start)
+                    start += 3
+                else:
+                    answer -= n
+                    if flag == True:
+                        start = nested(tokens, start)[1] 
+                        print("index updated! %i" %(start))
+        start += 1
+    return answer
+
+def nested(tokens, start):
+    end = brackets(tokens, start)
+    start += 1
+    answer = tokens[start]['number']
+    return calc(tokens, start, end, answer), end
 
 
 def evaluate(tokens):
     index = 1 
     answer = 0
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-
-    while index < len(tokens):
-        if tokens[index]['type'] == 'OBRACKET':
-            print("as")
-        if tokens[index]['type'] == 'NUMBER':
-            if tokens[index - 1]['type'] == 'PLUS':
-                if signs(len(tokens), index, tokens):
-                    answer += ranged(tokens, index)
-                    index += 3
-                else:
-                    answer += tokens[index]['number']
-            elif tokens[index - 1]['type'] == 'MINUS':
-                if signs(len(tokens), index, tokens):
-                    answer -= ranged(tokens, index)
-                    index += 3
-                else:
-                    answer -= tokens[index]['number']
-            elif tokens[index - 1]['type'] == 'MULTIPLY':
-                answer *= tokens[index][number]
-            else:
-                print('Invalid syntax')
-                exit(1)
-        index += 1
-    return answer
-
+    
+    return calc(tokens, index, len(tokens), answer)
+    
 
 ##########################################
 # Check if code is correct
@@ -162,6 +189,8 @@ def run_test():
     test("2-9*2")
     test("2*3")
     test("6/4")
+    test("1-(5+1)")
+    test("(5+2)*2")
     print("==== Test finished! ====\n")
 
 run_test()
