@@ -87,7 +87,7 @@ def tokenize(line):
         elif line[index] == ')':
             (token, index) = read_close_bracket(line, index)
 
-        # if character is invalid
+        # If character is invalid
         else:
             print('Invalid character found: ' + line[index])
             exit(1)
@@ -96,65 +96,112 @@ def tokenize(line):
 
     return tokens
 
-def brackets(tokens, index):
-    # Finds bracket pair
-    while index < len(tokens):
-        if tokens[index]['type'] == 'CBRACKET':
-            return index
-        index += 1
+def nested(tokens, start):
+    """
+    Calculates the value inside the parentheses and collapses the parentheses into its total value
+    :type token: List[dict]
+    :type start: int
+    :rtype: List[dict]
+    """
+
+    def brackets(index):
+        """
+        Searches for the location of the close parenthesis 
+        :type: int
+        :rtype: int
+        """
+        while index < len(tokens):
+            if tokens[index]['type'] == 'CBRACKET':
+                return index
+            index += 1
+
+    close = brackets(start)
+
+    # Calculates the total value inside parentheses
+    num = calc(tokens, start + 1, close, tokens[start + 1]['number'])
+
+    # Replaces open parentheses with num
+    tokens[start] = {'type': 'NUMBER', 'number': num}
+
+    # Shrinks parentheses
+    del tokens[start + 1: close + 1]
+
+    return tokens
 
 
+def calc(tokens, start, end, val):
+    """
+    Main calculation function
+    :type tokens: List[dict]
+    :type start, end: int
+    :type val: int or float
+    :rtype answer: int or float
+    """
+    answer = val
 
-def calc(tokens, start, end, answer):
-    flag = False
     while start < end:
         if tokens[start]['type'] == 'NUMBER' or tokens[start]['type'] == 'OBRACKET':
-
+            
+            # If a pair of parentheses is found
             if tokens[start]['type'] == 'OBRACKET':
-                close = brackets(tokens, start)
-                n = calc(tokens, start + 1, close, tokens[start + 1]['number'])
-                tokens[start] = {'type': 'NUMBER', 'number': n}
-                del tokens[start + 1: close + 1]
+                
+                # Updates tokens list and loop
+                tokens = nested(tokens, start)
                 end = len(tokens)
                                   
-            if tokens[start]['type'] == 'NUMBER':
-                n = tokens[start]['number']
+            # Value to be operated on
+            n = tokens[start]['number']
 
+            # Check if index goes out of bound
             if start + 1 < end and tokens[start + 1]['type'] == 'MULTIPLY':
+
                 if tokens[start + 2]['type'] == 'OBRACKET':
                     bracket_start = start + 2
-                    close = brackets(tokens, start)
-                    n1 = calc(tokens, bracket_start + 1, close, tokens[bracket_start + 1]['number'])
-                    tokens[bracket_start] = {'type': 'NUMBER', 'number': n1}
-                    del tokens[bracket_start + 1: close + 1]
+                    tokens = nested(tokens, bracket_start)
                     end = len(tokens)
-
+                
+                # Product of two values and shrinks the pair into the product
                 n *= tokens[start + 2]['number']
-                flag = True
-
+                tokens[start] = {'type': 'NUMBER', 'number': n}
+                del tokens[start + 1: start + 3]
+                end = len(tokens)
+                    
+                    
+            if start + 1 < end and tokens[start + 1]['type'] == 'DIVIDE':
+                
+                if tokens[start + 2]['type'] == 'OBRACKET':
+                        bracket_start = start + 2
+                        tokens = nested(tokens, bracket_start)
+                        end = len(tokens)
+                
+                # Division of two values and shrinks the pair into the product
+                n /= tokens[start + 2]['number']
+                tokens[start] = {'type': 'NUMBER', 'number': n}
+                del tokens[start + 1: start + 3]
+                end = len(tokens)
+                
+            
+            # Prioritises '*' and '/' operations
             if tokens[start - 1]['type'] == 'MULTIPLY':
                 answer *= n
+
+            elif tokens[start - 1]['type'] == 'DIVIDE':
+                answer /= n
                 
             elif tokens[start - 1]['type'] == 'PLUS':
                 answer += n
 
             elif tokens[start - 1]['type'] == 'MINUS':
                 answer -= n
-
-        if flag == True:
-            start += 2
-
+        
         start += 1
 
     return answer
 
 def evaluate(tokens):
-    index = 1 
-    answer = 0
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-    return calc(tokens, index, len(tokens), answer)
+    return calc(tokens, 1, len(tokens), 0)
     
-
 ##########################################
 # Check if code is correct
 def test(line):
