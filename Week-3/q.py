@@ -122,43 +122,37 @@ def ranged(tokens, index):
     return answer
 
 def calc(tokens, start, end, answer):
-    flag = False
+    flag = 0
     while start < end:
+        print("loop is on")
+        print("current value stored in answer", answer)
         if tokens[start]['type'] == 'NUMBER' or tokens[start]['type'] == 'OBRACKET':
             if tokens[start]['type'] == 'NUMBER':
                 n = tokens[start]['number']
-                print("n",n)
-                print("@", start)
             else:
-                print("in")
-                flag = True
-                n = nested(tokens, start)[0]
-                print("nested", n)
+                close = brackets(tokens, start)
+                n = calc(tokens, start + 1, close, tokens[start + 1]['number'])
+                flag += 1
+
             if tokens[start - 1]['type'] == 'PLUS':
                 print("plus")
-                if signs(start, tokens):
-                    answer += ranged(tokens, start)
-                    start += 3
-                else:
-                    answer += n
-                    print(answer)
-                    if flag == True:
-                        start = nested(tokens, start)[1]
+                print("answer updated")
+                answer += n
+                print("ans", answer)
 
             elif tokens[start - 1]['type'] == 'MINUS':
                 print("minus")
-                if signs(start, tokens):
-                    answer -= ranged(tokens, start)
-                    start += 3
-                else:
-                    answer -= n
-                    if flag == True:
-                        start = nested(tokens, start)[1] 
+                answer -= n
 
             elif tokens[start - 1]['type'] == 'MULTIPLY':
-                print("times")
-                print("n2", n)
+                print("multiply")
                 answer *= n
+
+        if flag > 0:
+            start = close
+            print("index updated to", start)
+            flag = 0 
+
         start += 1
     return answer
 
