@@ -96,12 +96,6 @@ def tokenize(line):
 
     return tokens
 
-def signs(index, tokens):
-    if index + 1 < len(tokens):
-        if tokens[index + 1]['type'] == 'MULTIPLY' or tokens[index + 1]['type'] == 'DIVIDE':
-            return True
-    return False
-
 def brackets(tokens, index):
     # Finds bracket pair
     while index < len(tokens):
@@ -109,64 +103,50 @@ def brackets(tokens, index):
             return index
         index += 1
 
-def ranged(tokens, index):
-    # first number in operation
-    if tokens[index + 2]['type'] == 'OBRACKET':
-        n = nested(tokens, index)[0]
-    else:
-        n = tokens[index + 2]['number']
-    if tokens[index + 1]['type'] == 'MULTIPLY':
-        answer = tokens[index]['number'] * n
-    elif tokens[index + 1]['type'] == 'DIVIDE':
-        answer = tokens[index]['number'] / n
-    return answer
+
 
 def calc(tokens, start, end, answer):
-    flag = 0
+    flag = False
     while start < end:
-        print("loop is on")
-        print("current value stored in answer", answer)
         if tokens[start]['type'] == 'NUMBER' or tokens[start]['type'] == 'OBRACKET':
-            if tokens[start]['type'] == 'NUMBER':
-                n = tokens[start]['number']
-            else:
+
+            if tokens[start]['type'] == 'OBRACKET':
                 close = brackets(tokens, start)
                 n = calc(tokens, start + 1, close, tokens[start + 1]['number'])
-                flag += 1
+                tokens[start] = {'type': 'NUMBER', 'number': n}
+                del tokens[start + 1: close + 1]
+                end = len(tokens)
+                                  
+            if tokens[start]['type'] == 'NUMBER':
+                n = tokens[start]['number']
 
-            if tokens[start - 1]['type'] == 'PLUS':
-                print("plus")
-                print("answer updated")
+            if start + 1 < end and tokens[start + 1]['type'] == 'MULTIPLY':
+                if tokens[start + 2]['type'] == 'OBRACKET':
+                    bracket_start = start + 2
+                    close = brackets(tokens, start)
+                    n1 = calc(tokens, bracket_start + 1, close, tokens[bracket_start + 1]['number'])
+                    tokens[bracket_start] = {'type': 'NUMBER', 'number': n1}
+                    del tokens[bracket_start + 1: close + 1]
+                    end = len(tokens)
+
+                n *= tokens[start + 2]['number']
+                flag = True
+
+            if tokens[start - 1]['type'] == 'MULTIPLY':
+                answer *= n
+                
+            elif tokens[start - 1]['type'] == 'PLUS':
                 answer += n
-                print("ans", answer)
 
             elif tokens[start - 1]['type'] == 'MINUS':
-                print("minus")
                 answer -= n
 
-            elif tokens[start - 1]['type'] == 'MULTIPLY':
-                print("multiply")
-                answer *= n
-
-        if flag > 0:
-            start = close
-            print("index updated to", start)
-            flag = 0 
+        if flag == True:
+            start += 2
 
         start += 1
+
     return answer
-
-def nested(tokens, start):
-    # Finds end bracket
-    end = brackets(tokens, start)
-    # Moves 1 step forward to get number 
-    start += 1
-    while tokens[start]['type'] != 'NUMBER':
-        start += 1
-    answer = tokens[start]['number']
-    print("first in nested", answer)
-    return calc(tokens, start, end, answer), end
-
 
 def evaluate(tokens):
     index = 1 
@@ -192,13 +172,15 @@ def run_test():
     test("1+2")
     test("1.0+2.1-3")
     test("2+9*2")
-    test("2+9/3")
     test("2-9*2")
     test("2*3")
-    test("6/4")
     test("1-(5+1)")
     test("(5+2)*2")
     test("2*(5+2)")
+    test("2+2*(5+1)")
+    test("2+(5+1)*2")
+    test("2+(5+2*12)*2")
+    test("(2+1)*(2+1)")
     print("==== Test finished! ====\n")
 
 run_test()
