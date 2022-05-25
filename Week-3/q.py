@@ -22,7 +22,6 @@ def read_number(line, index):
     token = {'type': 'NUMBER', 'number': number}
     return token, index
 
-
 def read_plus(line, index):
     token = {'type': 'PLUS'}
     return token, index + 1
@@ -128,7 +127,6 @@ def nested(tokens, start):
 
     return tokens
 
-
 def calc(tokens, start, end, val):
     """
     Main calculation function
@@ -164,8 +162,7 @@ def calc(tokens, start, end, val):
                 n *= tokens[start + 2]['number']
                 tokens[start] = {'type': 'NUMBER', 'number': n}
                 del tokens[start + 1: start + 3]
-                end = len(tokens)
-                    
+                end = len(tokens)      
                     
             if start + 1 < end and tokens[start + 1]['type'] == 'DIVIDE':
                 
@@ -179,18 +176,14 @@ def calc(tokens, start, end, val):
                 tokens[start] = {'type': 'NUMBER', 'number': n}
                 del tokens[start + 1: start + 3]
                 end = len(tokens)
-                
             
             # Prioritises '*' and '/' operations
             if tokens[start - 1]['type'] == 'MULTIPLY':
                 answer *= n
-
             elif tokens[start - 1]['type'] == 'DIVIDE':
                 answer /= n
-                
             elif tokens[start - 1]['type'] == 'PLUS':
                 answer += n
-
             elif tokens[start - 1]['type'] == 'MINUS':
                 answer -= n
         
@@ -228,6 +221,8 @@ def run_test():
     test("2+(5+1)*2")
     test("2+(5+2*12)*2")
     test("(2+1)*(2+1)")
+    test("2*3*4")
+    test("2*6/4")
     print("==== Test finished! ====\n")
 
 run_test()
