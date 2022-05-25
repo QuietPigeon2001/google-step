@@ -15,7 +15,6 @@ def cache_queue(cache, n):
         url = input()
         print("Webpage: ")
         webpage = input()
-
          
         # Adds url to list to record order (in reverse order)
         pair = {url: webpage}
