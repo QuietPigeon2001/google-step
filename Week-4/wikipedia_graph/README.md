@@ -2,7 +2,7 @@
   Week 4
  </h1>
 <p>
-  Here is my file for the assignment.
+  Here is my file for the assignment. The default text file used are the smaller text files. 
 </p>
 <h1>
   How to use
