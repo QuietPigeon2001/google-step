@@ -27,6 +27,7 @@ def util(infile, outfile):
         Calculates all the distances between the selected node and other nodes
         :type index: int
         :type coords: List[float]
+        :rtype: Dict{int: float}
         """
         costs = {}
         coord = coords[index]
