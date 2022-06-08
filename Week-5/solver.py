@@ -58,6 +58,7 @@ def util(infile, outfile):
     # Selects the first node as starting point
     curr = 0
     route.append(curr)
+    links = {}
 
     # While the path has not contained all of the nodes
     while len(route) < len(coords):
@@ -79,8 +80,47 @@ def util(infile, outfile):
             else:
                 # Adds the next node to route
                 route.append(nx)
+                links[curr] = nx
                 curr = nx
-                break 
+                break
+
+    print(links)
+
+    def swap(route, node_1, node_2):
+        new_route = []
+        new_route.append(route[0])
+        new_route.append(route[node_1])
+        new_route.append(route[node_2])
+        new_route.append(route[node_1 + 1])
+        for i in range(node_2, len(route)):
+            new_route.append(route[i])
+        return new_route
+
+    def pathLength(route):
+        path_length = 0
+        for i in range(len(route) - 1):
+            path_length += cost(coords[route[i]], coords[route[i+1]])
+        return path_length
+
+    shortened = True
+    while shortened:
+        shorted = False
+        curr_route = route
+        curr_len = pathLength(route)
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route) - 1):
+                new_route = swap(route, i, j)
+                new_length = pathLength(new_route)
+                if new_length < curr_len:
+                    curr_route = new_route
+                    curr_len = new_length
+                    shortened = True
+                print(i, j)
+                print(shortened)
+    print(curr_route)
+
+    print(pathLength(route))
+
     
     # Converts list items in route from int to str
     for i in range(len(route)):
@@ -99,7 +139,7 @@ def util(infile, outfile):
 
 def main():
     # Iterates thru all 7 inputs
-    for i in range(7):
+    for i in range(1):
         infile = "google-step-tsp/input_" + str(i) + ".csv"
         outfile = "google-step-tsp/output_" + str(i) + ".csv"
         util(infile, outfile)

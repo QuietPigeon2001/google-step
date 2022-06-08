@@ -223,6 +223,8 @@ def run_test():
     test("(2+1)*(2+1)")
     test("2*3*4")
     test("2*6/4")
+    test("1")
+    test("2+(2*3+2/4)")
     print("==== Test finished! ====\n")
 
 run_test()
