@@ -48,6 +48,7 @@ def util(infile, outfile):
             if val == v:
                 return k
 
+
     # Converts list items from string to float
     for i in range(len(coords)):
         for j in range(len(coords[i])):
@@ -59,6 +60,7 @@ def util(infile, outfile):
     curr = 0
     route.append(curr)
     links = {}
+    ls = 0
 
     # While the path has not contained all of the nodes
     while len(route) < len(coords):
@@ -83,45 +85,65 @@ def util(infile, outfile):
                 links[curr] = nx
                 curr = nx
                 break
-
-    print(links)
-
+    
     def swap(route, node_1, node_2):
+        """
+        Performs 2-opt swap
+        :type route: List[int]
+        :type node_1: int
+        :type node_2: int
+        :rtype: List[int]
+        """
         new_route = []
-        new_route.append(route[0])
-        new_route.append(route[node_1])
-        new_route.append(route[node_2])
-        new_route.append(route[node_1 + 1])
-        for i in range(node_2, len(route)):
+        for i in range(node_1 + 1):
             new_route.append(route[i])
+        
+        for i in range(node_2, node_1, -1):
+            new_route.append(route[i])
+
+        for i in range(node_2 + 1, len(route)):
+            new_route.append(route[i])
+
         return new_route
 
     def pathLength(route):
+        """
+        Calculates the length of path
+        :type: List[int]
+        :rtype: float
+        """
         path_length = 0
         for i in range(len(route) - 1):
             path_length += cost(coords[route[i]], coords[route[i+1]])
+        path_length += cost(coords[route[-1]], coords[route[0]])
         return path_length
 
-    shortened = True
-    while shortened:
-        shorted = False
-        curr_route = route
-        curr_len = pathLength(route)
-        for i in range(1, len(route) - 2):
-            for j in range(i + 1, len(route) - 1):
-                new_route = swap(route, i, j)
-                new_length = pathLength(new_route)
-                if new_length < curr_len:
-                    curr_route = new_route
-                    curr_len = new_length
-                    shortened = True
-                print(i, j)
-                print(shortened)
-    print(curr_route)
+    """
+    def startsFrom(route, node):
+        # moves the target node to the head of the list
+        new_route = []
+        for i in range(1, len(route)):
+            new_route.append(route[i])
+        new_route.append(route[0])
+        return new_route
+    """
 
-    print(pathLength(route))
-
+    # 2-opt swap
+    curr_length = pathLength(route)
+    pathImproved = True
     
+    # Loop continues until the route cannot be shortened anymore
+    while pathImproved:
+        pathImproved = False
+        for i in range(1, len(route)):
+            for j in range(i + 1, len(route)):
+                new_route = swap(route, i, j) 
+                new_length = pathLength(new_route)
+                if new_length < curr_length:
+                    # If route is shortened, then loop continues
+                    pathImproved = True
+                    route = new_route
+
     # Converts list items in route from int to str
     for i in range(len(route)):
         route[i] = str(route[i])
@@ -139,7 +161,7 @@ def util(infile, outfile):
 
 def main():
     # Iterates thru all 7 inputs
-    for i in range(1):
+    for i in range(7):
         infile = "google-step-tsp/input_" + str(i) + ".csv"
         outfile = "google-step-tsp/output_" + str(i) + ".csv"
         util(infile, outfile)
