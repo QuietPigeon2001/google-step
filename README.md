@@ -1,1 +1,1 @@
-### Repo for step.
+### Repo for the Google STEP training course.
